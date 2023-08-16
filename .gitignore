@@ -1,0 +1,5 @@
+vendor/*
+app/configuration/cmd/.env
+
+.idea
+.DS_Store
