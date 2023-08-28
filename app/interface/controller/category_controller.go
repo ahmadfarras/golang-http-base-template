@@ -30,15 +30,16 @@ func (c *CategoryController) Create(writer http.ResponseWriter, req *http.Reques
 	createRequest := request.CategoryCreateRequest{}
 	err := decoder.Decode(&createRequest)
 	if err != nil {
-		resp := handler.HandleError(err)
+		resp := handler.HandleError(req.Context(), err)
 		helper.JsonEncode(resp.StatusCode, writer, resp)
 		return
 	}
 
 	err = c.categoryUsecase.Create(req.Context(), createRequest)
 	if err != nil {
-		resp := handler.HandleError(err)
+		resp := handler.HandleError(req.Context(), err)
 		helper.JsonEncode(resp.StatusCode, writer, resp)
+		return
 	}
 
 	resp := response.Created()
@@ -50,7 +51,7 @@ func (c *CategoryController) GetById(writer http.ResponseWriter, req *http.Reque
 	categoryId, err := strconv.Atoi(params.ByName("categoryId"))
 	if err != nil {
 		logrus.Error(err)
-		resp := handler.HandleError(err)
+		resp := handler.HandleError(req.Context(), err)
 		helper.JsonEncode(resp.StatusCode, writer, resp)
 		return
 	}
@@ -58,7 +59,7 @@ func (c *CategoryController) GetById(writer http.ResponseWriter, req *http.Reque
 	res, err := c.categoryUsecase.GetById(req.Context(), categoryId)
 	if err != nil {
 		logrus.Error(err)
-		resp := handler.HandleError(err)
+		resp := handler.HandleError(req.Context(), err)
 		helper.JsonEncode(resp.StatusCode, writer, resp)
 		return
 	}
@@ -71,7 +72,7 @@ func (c *CategoryController) GetAll(writer http.ResponseWriter, req *http.Reques
 	res, err := c.categoryUsecase.GetAll(req.Context())
 	if err != nil {
 		logrus.Error(err)
-		resp := handler.HandleError(err)
+		resp := handler.HandleError(req.Context(), err)
 		helper.JsonEncode(resp.StatusCode, writer, resp)
 		return
 	}
@@ -85,7 +86,7 @@ func (c *CategoryController) Update(writer http.ResponseWriter, req *http.Reques
 	categoryId, err := strconv.Atoi(params.ByName("categoryId"))
 	if err != nil {
 		logrus.Error(err)
-		resp := handler.HandleError(err)
+		resp := handler.HandleError(req.Context(), err)
 		helper.JsonEncode(resp.StatusCode, writer, resp)
 		return
 	}
@@ -94,7 +95,7 @@ func (c *CategoryController) Update(writer http.ResponseWriter, req *http.Reques
 	updateRequest := request.CategoryUpdateRequest{}
 	err = decoder.Decode(&updateRequest)
 	if err != nil {
-		resp := handler.HandleError(err)
+		resp := handler.HandleError(req.Context(), err)
 		helper.JsonEncode(resp.StatusCode, writer, resp)
 		return
 	}
@@ -102,7 +103,7 @@ func (c *CategoryController) Update(writer http.ResponseWriter, req *http.Reques
 	err = c.categoryUsecase.Update(req.Context(), categoryId, updateRequest)
 	if err != nil {
 		logrus.Error(err)
-		resp := handler.HandleError(err)
+		resp := handler.HandleError(req.Context(), err)
 		helper.JsonEncode(resp.StatusCode, writer, resp)
 		return
 	}
@@ -115,7 +116,7 @@ func (c *CategoryController) Delete(writer http.ResponseWriter, req *http.Reques
 	categoryId, err := strconv.Atoi(params.ByName("categoryId"))
 	if err != nil {
 		logrus.Error(err)
-		resp := handler.HandleError(err)
+		resp := handler.HandleError(req.Context(), err)
 		helper.JsonEncode(resp.StatusCode, writer, resp)
 		return
 	}
@@ -123,7 +124,7 @@ func (c *CategoryController) Delete(writer http.ResponseWriter, req *http.Reques
 	err = c.categoryUsecase.Delete(req.Context(), categoryId)
 	if err != nil {
 		logrus.Error(err)
-		resp := handler.HandleError(err)
+		resp := handler.HandleError(req.Context(), err)
 		helper.JsonEncode(resp.StatusCode, writer, resp)
 		return
 	}

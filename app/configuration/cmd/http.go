@@ -15,7 +15,9 @@ import (
 )
 
 func StartHttpApp() {
-	logger.InitLogrus()
+	log := logger.InitLogger()
+	defer log.Sync()
+
 	if err := godotenv.Load(".env"); err != nil {
 		logrus.Panic(err)
 	}
