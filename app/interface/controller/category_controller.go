@@ -12,7 +12,6 @@ import (
 	"ahmadfarras/golang-http-base-template/app/domain/model/request"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/sirupsen/logrus"
 )
 
 type CategoryController struct {
@@ -30,64 +29,60 @@ func (c *CategoryController) Create(writer http.ResponseWriter, req *http.Reques
 	createRequest := request.CategoryCreateRequest{}
 	err := decoder.Decode(&createRequest)
 	if err != nil {
-		resp := handler.HandleError(req.Context(), err)
-		helper.JsonEncode(resp.StatusCode, writer, resp)
+		resp := handler.HandleError(err)
+		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 		return
 	}
 
 	err = c.categoryUsecase.Create(req.Context(), createRequest)
 	if err != nil {
-		resp := handler.HandleError(req.Context(), err)
-		helper.JsonEncode(resp.StatusCode, writer, resp)
+		resp := handler.HandleError(err)
+		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 		return
 	}
 
 	resp := response.Created()
-	helper.JsonEncode(resp.StatusCode, writer, resp)
+	helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 }
 
 func (c *CategoryController) GetById(writer http.ResponseWriter, req *http.Request, params httprouter.Params) {
 
 	categoryId, err := strconv.Atoi(params.ByName("categoryId"))
 	if err != nil {
-		logrus.Error(err)
-		resp := handler.HandleError(req.Context(), err)
-		helper.JsonEncode(resp.StatusCode, writer, resp)
+		resp := handler.HandleError(err)
+		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 		return
 	}
 
 	res, err := c.categoryUsecase.GetById(req.Context(), categoryId)
 	if err != nil {
-		logrus.Error(err)
-		resp := handler.HandleError(req.Context(), err)
-		helper.JsonEncode(resp.StatusCode, writer, resp)
+		resp := handler.HandleError(err)
+		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 		return
 	}
 
 	resp := response.SuccessWithData(res)
-	helper.JsonEncode(resp.StatusCode, writer, resp)
+	helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 }
 
 func (c *CategoryController) GetAll(writer http.ResponseWriter, req *http.Request, params httprouter.Params) {
 	res, err := c.categoryUsecase.GetAll(req.Context())
 	if err != nil {
-		logrus.Error(err)
-		resp := handler.HandleError(req.Context(), err)
-		helper.JsonEncode(resp.StatusCode, writer, resp)
+		resp := handler.HandleError(err)
+		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 		return
 	}
 
 	resp := response.SuccessWithData(res)
-	helper.JsonEncode(resp.StatusCode, writer, resp)
+	helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 }
 
 func (c *CategoryController) Update(writer http.ResponseWriter, req *http.Request, params httprouter.Params) {
 
 	categoryId, err := strconv.Atoi(params.ByName("categoryId"))
 	if err != nil {
-		logrus.Error(err)
-		resp := handler.HandleError(req.Context(), err)
-		helper.JsonEncode(resp.StatusCode, writer, resp)
+		resp := handler.HandleError(err)
+		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 		return
 	}
 
@@ -95,40 +90,37 @@ func (c *CategoryController) Update(writer http.ResponseWriter, req *http.Reques
 	updateRequest := request.CategoryUpdateRequest{}
 	err = decoder.Decode(&updateRequest)
 	if err != nil {
-		resp := handler.HandleError(req.Context(), err)
-		helper.JsonEncode(resp.StatusCode, writer, resp)
+		resp := handler.HandleError(err)
+		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 		return
 	}
 
 	err = c.categoryUsecase.Update(req.Context(), categoryId, updateRequest)
 	if err != nil {
-		logrus.Error(err)
-		resp := handler.HandleError(req.Context(), err)
-		helper.JsonEncode(resp.StatusCode, writer, resp)
+		resp := handler.HandleError(err)
+		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 		return
 	}
 
 	resp := response.Success()
-	helper.JsonEncode(resp.StatusCode, writer, resp)
+	helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 }
 
 func (c *CategoryController) Delete(writer http.ResponseWriter, req *http.Request, params httprouter.Params) {
 	categoryId, err := strconv.Atoi(params.ByName("categoryId"))
 	if err != nil {
-		logrus.Error(err)
-		resp := handler.HandleError(req.Context(), err)
-		helper.JsonEncode(resp.StatusCode, writer, resp)
+		resp := handler.HandleError(err)
+		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 		return
 	}
 
 	err = c.categoryUsecase.Delete(req.Context(), categoryId)
 	if err != nil {
-		logrus.Error(err)
-		resp := handler.HandleError(req.Context(), err)
-		helper.JsonEncode(resp.StatusCode, writer, resp)
+		resp := handler.HandleError(err)
+		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 		return
 	}
 
 	resp := response.Success()
-	helper.JsonEncode(resp.StatusCode, writer, resp)
+	helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
 }

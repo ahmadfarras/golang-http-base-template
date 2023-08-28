@@ -7,10 +7,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
-func NewSqlDb() *sql.DB {
+func NewSqlDb(log *zap.Logger) *sql.DB {
 	db, err := sql.Open(
 		os.Getenv(constant.DATABASE_DRIVER),
 		fmt.Sprintf("%v:%v@tcp(%v:%v)/%v",
@@ -22,7 +22,7 @@ func NewSqlDb() *sql.DB {
 		),
 	)
 	if err != nil {
-		logrus.Fatal(err)
+		log.Fatal(err.Error())
 	}
 
 	db.SetMaxIdleConns(5)

@@ -11,7 +11,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 func StartHttpApp() {
@@ -19,24 +19,24 @@ func StartHttpApp() {
 	defer log.Sync()
 
 	if err := godotenv.Load(".env"); err != nil {
-		logrus.Panic(err)
+		log.Panic(err.Error())
 	}
 
-	db := config.NewSqlDb()
+	db := config.NewSqlDb(log)
 	router := routes.InitRoute(db)
 
-	StartServer(router)
+	StartServer(router, log)
 }
 
-func StartServer(router *httprouter.Router) {
+func StartServer(router *httprouter.Router, log *zap.Logger) {
 	server := http.Server{
 		Addr:    fmt.Sprintf(":%v", os.Getenv(constant.APP_PORT)),
 		Handler: router,
 	}
 
-	logrus.Info("Server listening on", server.Addr)
+	log.Info("Server listening on" + server.Addr)
 	err := server.ListenAndServe()
 	if err != nil {
-		logrus.Fatal(err)
+		log.Fatal(err.Error())
 	}
 }
