@@ -2,10 +2,9 @@ package controller
 
 import (
 	"ahmadfarras/golang-http-base-template/app/domain/usecase"
-	"ahmadfarras/golang-http-base-template/app/infrastructure/helper"
 	"ahmadfarras/golang-http-base-template/app/interface/handler"
+	"ahmadfarras/golang-http-base-template/app/interface/helper"
 	"ahmadfarras/golang-http-base-template/app/interface/response"
-	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -25,9 +24,9 @@ func NewCategoryController(categoryUsecase usecase.CategoryUsecase) *CategoryCon
 }
 
 func (c *CategoryController) Create(writer http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	decoder := json.NewDecoder(req.Body)
+
 	createRequest := request.CategoryCreateRequest{}
-	err := decoder.Decode(&createRequest)
+	err := helper.JsonDecode(req.Context(), req.Body, &createRequest)
 	if err != nil {
 		resp := handler.HandleError(err)
 		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
@@ -86,9 +85,8 @@ func (c *CategoryController) Update(writer http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	decoder := json.NewDecoder(req.Body)
 	updateRequest := request.CategoryUpdateRequest{}
-	err = decoder.Decode(&updateRequest)
+	err = helper.JsonDecode(req.Context(), req.Body, &updateRequest)
 	if err != nil {
 		resp := handler.HandleError(err)
 		helper.JsonEncode(req.Context(), resp.StatusCode, writer, resp)
