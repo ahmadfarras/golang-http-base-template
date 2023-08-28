@@ -5,6 +5,7 @@ import (
 	"ahmadfarras/golang-http-base-template/app/configuration/logger"
 	"ahmadfarras/golang-http-base-template/app/configuration/routes"
 	"ahmadfarras/golang-http-base-template/app/infrastructure/config"
+	"ahmadfarras/golang-http-base-template/app/infrastructure/middleware"
 	"fmt"
 	"net/http"
 	"os"
@@ -31,12 +32,12 @@ func StartHttpApp() {
 func StartServer(router *httprouter.Router, log *zap.Logger) {
 	server := http.Server{
 		Addr:    fmt.Sprintf(":%v", os.Getenv(constant.APP_PORT)),
-		Handler: router,
+		Handler: middleware.RequestLogger(router),
 	}
 
 	log.Info("Server listening on" + server.Addr)
-	err := server.ListenAndServe()
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	log.Fatal(
+		"Server Closed",
+		zap.Error(server.ListenAndServe()),
+	)
 }
